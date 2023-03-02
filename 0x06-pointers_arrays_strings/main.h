@@ -1,5 +1,6 @@
 #ifndef FILE_MAIN
 #define FILE_MAIN
+
 int main(void);
 int _putchar(char c);
 char *_strcat(char *dest, char *src);
@@ -13,4 +14,5 @@ char *leet(char *);
 char *rot13(char *);
 void print_number(int n);
 char *infinite_add(char *n1, char *n2, char *r, int size_r);
+
 #endif
