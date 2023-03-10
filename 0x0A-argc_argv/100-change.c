@@ -2,7 +2,34 @@
 #include <stdlib.h>
 
 /**
- * main - Calculates the minimum number of coins to make change
+ * min_coins - Calculates the minimum number of coins to make change
+ * @cents: The amount of cents
+ * @coins: The array of coin values
+ *
+ * Return: The minimum number of coins used
+ */
+int min_coins(int cents, int coins[])
+{
+	int i, coins_used = 0;
+
+	while (cents > 0)
+	{
+		for (i = 0; i < 5; i++)
+		{
+			if (cents >= coins[i])
+			{
+				cents -= coins[i];
+				coins_used++;
+				break;
+			}
+		}
+	}
+
+	return (coins_used);
+}
+
+/**
+ * main - Prints the minimum number of coins to make change
  * @argc: The number of arguments
  * @argv: The array of arguments
  *
@@ -10,7 +37,8 @@
  */
 int main(int argc, char *argv[])
 {
-	int cents, coins_used = 0, i;
+	int cents;
+	int coins[] = {25, 10, 5, 2, 1};
 
 	if (argc != 2)
 	{
@@ -26,32 +54,7 @@ int main(int argc, char *argv[])
 		return (0);
 	}
 
-	for (i = cents; i > 0;)
-	{
-		switch (i >= 25 ? 25 : i >= 10 ? 10 : i >= 5 ? 5 : i >= 2 ? 2 : 1)
-		{
-			case 25:
-				i -= 25;
-				coins_used++;
-				break;
-			case 10:
-				i -= 10;
-				coins_used++;
-				break;
-			case 5:
-				i -= 5;
-				coins_used++;
-				break;
-			case 2:
-				i -= 2;
-				coins_used++;
-				break;
-			case 1:
-				i -= 1;
-				coins_used++;
-				break;
-		}
-	}
-	printf("%d\n", coins_used);
+	printf("%d\n", min_coins(cents, coins));
+
 	return (0);
 }
