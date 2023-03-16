@@ -1,122 +1,143 @@
 #include "main.h"
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 
+int _strlen(char *s);
+void *mem_alloc(unsigned int size);
+void _puts(char *s);
+void _mul(char *num1, char *num2);
 
 /**
- * add - Adds two numbers as strings and returns the result as a string
+ * _strlen - finds the length of a string
+ * @s: string
  *
- * @num1: First number to add
- * @num2: Second number to add
- *
- * Return: Result of the addition as a string
+ * Return: length of a string
  */
-
-
-#include <stdlib.h>
-
-int find_len(char *str)
+int _strlen(char *s)
 {
-        int len = 0;
+	int len = 0;
 
-        while (*str++)
-                len++;
+	while (s[len] != '\0')
+		len++;
 
-        return (len);
+	return (len);
 }
 
-char *multiply(char *num1, char *num2)
+/**
+ * mem_alloc - allocate memory using malloc
+ * @size: size of the memory
+ *
+ * Return: pointer to allocated memory
+ */
+void *mem_alloc(unsigned int size)
 {
-        int len_num1 = find_len(num1);
-        int len_num2 = find_len(num2);
-        char *prod = malloc(len_num1 + len_num2 + 1);
+	void *ptr = malloc(size);
 
-        if (prod == NULL)
-                exit(98);
+	if (ptr == NULL)
+	{
+		printf("Error\n");
+		exit(98);
+	}
 
-        for (int i = 0; i < len_num1 + len_num2; i++)
-                prod[i] = '0';
-
-        prod[len_num1 + len_num2] = '\0';
-
-        for (int i = len_num1 - 1; i >= 0; i--) {
-                int carry = 0;
-                char digit1 = num1[i];
-
-                for (int j = len_num2 - 1; j >= 0; j--) {
-                        char digit2 = num2[j];
-                        int prod_ij = (digit1 - '0') * (digit2 - '0');
-                        int sum = prod[i+j+1] - '0' + prod_ij + carry;
-                        prod[i+j+1] = (sum % 10) + '0';
-                        carry = sum / 10;
-                }
-
-                prod[i] += carry;
-        }
-
-        char *result = prod;
-
-        while (*result == '0')
-                result++;
-
-        if (*result == '\0')
-                result--;
-
-        char *result_copy = malloc(find_len(result) + 1);
-
-        if (result_copy == NULL)
-                exit(98);
-
-        for (int i = 0; i < find_len(result); i++)
-                result_copy[i] = result[i];
-
-        result_copy[find_len(result)] = '\0';
-
-        free(prod);
-
-        return result_copy;
+	return (ptr);
 }
 
-int is_valid_number(char *num)
+/**
+ * _puts - print a string
+ * @s: string
+ */
+void _puts(char *s)
 {
-        while (*num) {
-                if (*num < '0' || *num > '9')
-                        return 0;
+	int i;
 
-                num++;
-        }
-
-        return 1;
+	for (i = 0; s[i] != '\0'; i++)
+		putchar(s[i]);
+	putchar('\n');
 }
 
-int main(int argc, char **argv)
+/**
+ * _mul - multiplies two positive numbers
+ * @num1: first number
+ * @num2: second number
+ */
+void _mul(char *num1, char *num2)
 {
-        if (argc != 3) {
-                char *error_msg = "Error\n";
-                while (*error_msg)
-                        _putchar(*error_msg++);
+	int len1, len2, i, j, n, m, sum, carry;
+	char *prod;
 
-                exit(98);
-        }
+	len1 = _strlen(num1);
+	len2 = _strlen(num2);
 
-        char *num1 = argv[1];
-        char *num2 = argv[2];
+	prod = mem_alloc(sizeof(char) * (len1 + len2 + 1));
 
-        if (!is_valid_number(num1) || !is_valid_number(num2)) {
-                char *error_msg = "Error\n";
-                while (*error_msg)
-                        _putchar(*error_msg++);
+	for (i = 0; i < len1 + len2 + 1; i++)
+		prod[i] = '0';
 
-                exit(98);
-        }
+	for (i = len1 - 1; i >= 0; i--)
+	{
+		carry = 0;
+		n = num1[i] - '0';
 
-        char *result = multiply(num1, num2);
+		m = len2 + 1;
+		for (j = len2 - 1; j >= 0; j--)
+		{
+			m--;
+			sum = carry + (n * (num2[j] - '0')) +
+				(prod[m] - '0');
+			prod[m] = (sum % 10) + '0';
+			carry = sum / 10;
+		}
 
-        while (*result)
-                _putchar(*result++);
+		if (carry > 0)
+			prod[m - 1] += carry;
+	}
 
-        _putchar('\n');
+	i = 0;
+	while (prod[i] == '0' && i < len1 + len2 - 1)
+		i++;
 
-        return 0;
+	_puts(&prod[i]);
+
+	free(prod);
+}
+
+/**
+ * main - multiplies two positive numbers
+ * @argc: argument count
+ * @argv: arguments
+ *
+ * Return: 0 if successful
+ */
+int main(int argc, char *argv[])
+{
+	int i, j;
+
+	if (argc != 3)
+	{
+		printf("Error\n");
+		exit(98);
+	}
+
+	for (i = 1; i < argc; i++)
+	{
+		for (j = 0; argv[i][j] != '\0'; j++)
+		{
+			if (argv[i][j] < '0' || argv[i][j] > '9')
+			{
+				printf("Error\n");
+				exit(98);
+			}
+		}
+	}
+
+	if (*argv[1] == '0' || *argv[2] == '0')
+	{
+		_puts("0");
+		return (0);
+	}
+
+	_mul(argv[1], argv[2]);
+
+	return (0);
 }
 
