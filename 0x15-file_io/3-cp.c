@@ -67,9 +67,7 @@ int main(int argc, char *argv[])
 		exit(98);
 	}
 
-	umask(0);
-
-	to = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0666);
+	to = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
 	if (to == -1)
 	{
 		dprintf(STDERR_FILENO,
