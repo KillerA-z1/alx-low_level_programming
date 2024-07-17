@@ -16,5 +16,5 @@ int interpolation_search(int *array, size_t size, int value);
 
 /* Function of advanced tasks*/
 int exponential_search(int *array, size_t size, int target);
-int binary_search_(int *array, size_t size, int value);
+int binary_search_subarray(int *array, size_t start, size_t end, int target);
 #endif

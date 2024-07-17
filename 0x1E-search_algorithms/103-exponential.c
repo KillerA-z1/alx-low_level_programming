@@ -2,36 +2,39 @@
 #include "search_algos.h"
 
 /**
- * binary_search_ - Searches for a value in a sorted array of integers
- * @array: A pointer to the first element of the array to search in
- * @size: The number of elements in array
- * @value: The value to search for
+ * binary_search_subarray - Searches for a value in a sorted subarray.
+ * @array: A pointer to the first element of the array to search.
+ * @start: The starting index of the subarray to search.
+ * @end: The ending index of the subarray to search.
+ * @target: The value to search for.
  *
- * Return: The index where value is located, or -1 if not found
+ * Return: If the target is not present or the array is NULL, -1.
+ *         Otherwise, the index where the target is located.
+ *
+ * Description: Prints the subarray being searched after each change.
  */
-
-int binary_search_(int *array, size_t size, int value)
+int binary_search_subarray(int *array, size_t start, size_t end, int target)
 {
-	size_t left = 0, right = size - 1, mid, i;
+	size_t mid;
+	size_t index;
 
 	if (array == NULL)
 		return (-1);
 
-	while (left <= right)
+	while (start <= end)
 	{
 		printf("Searching in array: ");
-		for (i = left; i < right; i++)
-			printf("%d, ", array[i]);
-		printf("%d\n", array[i]);
+		for (index = start; index <= end; index++)
+			printf("%d%s", array[index], index == end ? "\n" : ", ");
 
-		mid = left + (right - left) / 2;
+		mid = start + (end - start) / 2;
 
-		if (array[mid] == value)
+		if (array[mid] == target)
 			return (mid);
-		if (array[mid] < value)
-			left = mid + 1;
+		if (array[mid] < target)
+			start = mid + 1;
 		else
-			right = mid - 1;
+			end = mid - 1;
 	}
 
 	return (-1);
@@ -50,13 +53,17 @@ int binary_search_(int *array, size_t size, int value)
 int exponential_search(int *array, size_t size, int value)
 {
 	size_t bound = 1;
-	size_t low, high;
+	size_t left, right;
+	int result;
 
 	if (array == NULL || size == 0)
 		return (-1);
 
 	if (array[0] == value)
+	{
+		printf("Value checked array[0] = [%d]\n", array[0]);
 		return (0);
+	}
 
 	while (bound < size && array[bound] < value)
 	{
@@ -64,10 +71,12 @@ int exponential_search(int *array, size_t size, int value)
 		bound *= 2;
 	}
 
-	low = bound / 2;
-	high = (bound < size) ? bound : size - 1;
+	left = bound / 2;
+	right = (bound < size) ? bound : size - 1;
 
-	printf("Value found between indexes [%lu] and [%lu]\n", low, high);
+	printf("Value found between indexes [%lu] and [%lu]\n", left, right);
 
-	return (binary_search_(array + low, high - low + 1, value) + low);
+	result = binary_search_subarray(array, left, right, value);
+
+	return (result);
 }
